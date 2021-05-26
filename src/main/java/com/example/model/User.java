@@ -2,12 +2,10 @@ package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -25,8 +23,9 @@ public class User implements Serializable {
     @NonNull
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user", cascade = CascadeType.ALL)
-    //@OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Relationship> relationships;
 }

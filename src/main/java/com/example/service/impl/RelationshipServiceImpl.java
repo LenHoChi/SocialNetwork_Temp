@@ -9,6 +9,7 @@ import com.example.repository.RelationshipRepository;
 import com.example.repository.UserRepository;
 import com.example.service.RelationshipService;
 import com.example.utils.convert.RelationshipConvert;
+import com.example.utils.convert.UserConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class RelationshipServiceImpl implements RelationshipService {
     UserRepository userRepository;
     @Override
     public Optional<RelationshipDTO> findRelationshipById(RelationshipPK relationshipPK) throws Exception {
-        return Optional.of(relationshipRepository.findById(relationshipPK).map(RelationshipConvert::convertModelToDTO).orElseThrow(() -> new Exception("Error")));
+        return Optional.of(relationshipRepository.findById(relationshipPK).map(RelationshipConvert::convertModelToDTO).orElseThrow(() -> new ResouceNotFoundException("Error not found")));
     }
     @Override
     public List<RelationshipDTO> findAllRelationships() {

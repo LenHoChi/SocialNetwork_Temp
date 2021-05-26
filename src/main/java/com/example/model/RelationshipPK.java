@@ -16,15 +16,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-//@RequiredArgsConstructor
 public class RelationshipPK implements Serializable {
-    //    @NonNull
     @Column(name = "user_email")
     @Email(message = "error email")
     @NotBlank(message = "not empty")
     @NotNull(message = "not null for this data")
     private String userEmail;
-    //    @NonNull
+
     @Column(name = "friend_email")
     @Email(message = "error email")
     @NotBlank(message = "not empty")

@@ -33,7 +33,6 @@ public class RelationshipController {
         }
         return ResponseEntity.ok(relationshipService.findAllRelationships());
     }
-
     //{"userEmail": "newmooncsu1@gmail.com","friendEmail": "newmooncsu2@gmail.com"}
     @PostMapping("/find-relationship-by-id")
     public ResponseEntity<?> findRelationshipById(@Valid @RequestBody RelationshipPK relationshipPK) throws Exception {
