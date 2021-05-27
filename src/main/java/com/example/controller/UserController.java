@@ -1,37 +1,24 @@
 package com.example.controller;
 
 import com.example.dto.UserDTO;
-import com.example.exception.BadRequestException;
-import com.example.model.Relationship;
-import com.example.model.User;
-import com.example.repository.RelationshipRepository;
-import com.example.repository.UserRepository;
-import com.example.service.RelationshipService;
 import com.example.service.UserService;
-import org.modelmapper.spi.ErrorMessage;
+import com.example.service.impl.RelationshipServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private RelationshipService relationshipService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RelationshipRepository relationshipRepository;
+
     @GetMapping("")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<?> findAllUsers(){
@@ -41,32 +28,23 @@ public class UserController {
         }
         return ResponseEntity.ok(userService.findAllUsers());
     }
-
     @PostMapping("")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) throws Exception {
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") String id) throws Exception {
-        if(relationshipService.checkMail(id)) {
-            return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
-        }else{
-            throw new BadRequestException("Email not accepted");
-        }
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable(value = "id") String id) throws Exception {
+        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable(value = "id") String id) throws Exception {
-        if(relationshipService.checkMail(id)) {
-            return ResponseEntity.ok(userService.findUserById(id));
-        }else{
-            throw new BadRequestException("Email not accept");
-        }
-    }
-    @GetMapping("/len")
-    public ResponseEntity<?> find(){
-        List<User> lst = userRepository.findAll();
-        return ResponseEntity.ok(lst);
+        return ResponseEntity.ok(userService.findUserById(id));
+//        if(relationshipService.checkMail(id)) {
+//            return ResponseEntity.ok(userService.findUserById(id));
+//        }else{
+//            throw new BadRequestException("Email not accept");
+//        }
     }
 }

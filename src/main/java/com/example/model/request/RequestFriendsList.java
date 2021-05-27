@@ -20,6 +20,6 @@ public class RequestFriendsList {
     @JsonProperty("email")
     @Email(message = "email error")
     @NotNull(message = "not null for email")
-    @NotBlank(message = "not empty")
+    @NotBlank(message = "must not be empty")
     private String email;
 }

@@ -44,7 +44,7 @@ public class RelationshipServiceTest {
 
     private RelationshipConvert relationshipConvert;
 
-    //test get all relationships
+    //test findAllRelationships()
     @Test
     public void testGetRelationships() throws Exception {
         RelationshipPK relationshipPK = new RelationshipPK("jason@gmail.com", "kati@gmail.com");
@@ -58,7 +58,7 @@ public class RelationshipServiceTest {
         List<RelationshipDTO> relationshipDTOList = relationshipService.findAllRelationships();
         assertEquals(relationshipList.size(), relationshipDTOList.size());
     }
-    //test get relationship by id
+    //test findRelationshipById()
     //tc1 happy case
     @Test
     public void testGetRelationshipById() throws Exception {
@@ -77,7 +77,7 @@ public class RelationshipServiceTest {
 //        Throwable exception = assertThrows(Exception.class, () -> relationshipService.findRelationshipById(relationshipPK));
 //        assertEquals("Error not foundd", exception.getMessage());
 //    }
-    //test for be friends
+    //test for beFriends()
     //tc1 happy case
     @Test
     public void testBeFriends() throws Exception {
@@ -201,7 +201,7 @@ public class RelationshipServiceTest {
         Throwable exception = assertThrows(ResouceNotFoundException.class, () -> relationshipService.findFriendsList(user.getEmail()));
         assertEquals("Not found any email matched", exception.getMessage());
     }
-    //test for getCommonFriendsList
+    //test for findCommonFriendsList()
     //tc1 happy case
     @Test
     public void testGetCommonFriendsList() throws Exception {
@@ -365,7 +365,7 @@ public class RelationshipServiceTest {
         List<String> lstTest = relationshipService.findReceiveUpdateList(user1.getEmail(),text);
         assertEquals(2, lstTest.size());
     }
-    //tc3 -- not found
+    //tc3 not exists email in table
     @Test
     public void testGetReceiveUpdateListError() throws Exception {
         List<String> lstTemp = new ArrayList<>();

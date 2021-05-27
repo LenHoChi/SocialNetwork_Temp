@@ -32,7 +32,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.16</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -137,6 +138,7 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
             <version>1.5.2.RELEASE</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -144,9 +146,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-<!--                <configuration>-->
-<!--                    <finalName>demo</finalName>-->
-<!--                </configuration>-->
+                <version>2.3.4.RELEASE</version>
             </plugin>
         </plugins>
     </build>

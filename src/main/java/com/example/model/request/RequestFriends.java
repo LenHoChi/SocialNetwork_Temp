@@ -26,5 +26,5 @@ public class RequestFriends {
     @JsonProperty("friends")
     @Size(min = 2, max= 2, message = "size must be 2")
 
-    private List<@NotNull(message = "not null for email") @Email(message = "email fail") @NotEmpty(message = "not empty") String> emails;
+    private List<@NotNull(message = "not null for email") @Email(message = "email error") @NotEmpty(message = "must not be empty") String> emails;
 }

@@ -1,9 +1,20 @@
 package com.example.controllerTest;
 
+import com.example.controller.RelationshipController;
 import com.example.controller.UserController;
+import com.example.dto.RelationshipDTO;
 import com.example.dto.UserDTO;
+import com.example.model.Relationship;
+import com.example.model.RelationshipPK;
+import com.example.model.User;
+import com.example.service.RelationshipService;
 import com.example.service.UserService;
+import com.example.model.request.RequestFriends;
+import com.example.model.request.RequestFriendsList;
+import com.example.model.request.RequestReciveUpdate;
+import com.example.model.request.RequestSubcriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,26 +24,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.*;
-
 import java.util.*;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -44,6 +49,7 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -54,19 +60,16 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "admin", password = "password", roles = {"ADMIN"})
-    //@WithMockUser(value = "spring")
     public void testGetAllUsers() throws Exception {
-        UserDTO userDTOA = new UserDTO("len1");
-        UserDTO userDTOB = new UserDTO("len2");
+        UserDTO userDTOA = new UserDTO("jason@gmail.com");
+        UserDTO userDTOB = new UserDTO("kati@gmail.com");
         List<UserDTO> userDTOList = Arrays.asList(userDTOA, userDTOB);
-        //when(userService.getAllUsers()).thenReturn(userDTOList);
         given(userService.findAllUsers()).willReturn(userDTOList);
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
-                //.andExpect(jsonPath("$.message").value("success"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].email", is("len1")))
-                .andExpect(jsonPath("$[1].email", is("len2")))
+                .andExpect(jsonPath("$[0].email", is("jason@gmail.com")))
+                .andExpect(jsonPath("$[1].email", is("kati@gmail.com")))
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$", hasSize(2)));
         verify(userService, times(2)).findAllUsers();
@@ -75,36 +78,34 @@ public class UserControllerTest {
 
     @Test
     public void testGetUser() throws Exception {
-        UserDTO userDTO = new UserDTO("len1");
+        UserDTO userDTO = new UserDTO("jason@gmail.com");
         when(userService.findUserById(userDTO.getEmail())).thenReturn(Optional.of(userDTO));
         mockMvc.perform(get("/api/users/{id}", userDTO.getEmail()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is("len1")))
+                .andExpect(jsonPath("$.email", is("jason@gmail.com")))
                 .andExpect(content().contentType("application/json"));
         verify(userService, times(1)).findUserById(userDTO.getEmail());
         verifyNoMoreInteractions(userService);
     }
     @Test
     public void testCreateUser() throws Exception {
-        UserDTO userDTO = new UserDTO("newmooncsu@gmail.com");
+        UserDTO userDTO = new UserDTO("jason@gmail.com");
 
         when(userService.saveUser(Mockito.any(UserDTO.class))).thenReturn(userDTO);
-        // given(userService.saveUser(any(UserDTO.class))).willReturn(userDTO);
         mockMvc.perform(post("/api/users")
                 .content(asJsonString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.email", is("newmooncsu@gmail.com")));
+                .andExpect(jsonPath("$.email", is("jason@gmail.com")));
         verify(userService, times(1)).saveUser(userDTO);
         verifyNoMoreInteractions(userService);
     }
     @Test
     public void testCreateUserByEmailWrongFormat() throws Exception {
-        UserDTO userDTO = new UserDTO("newmooncs");
+        UserDTO userDTO = new UserDTO("jason");
 
         when(userService.saveUser(Mockito.any(UserDTO.class))).thenReturn(userDTO);
-        // given(userService.saveUser(any(UserDTO.class))).willReturn(userDTO);
         mockMvc.perform(post("/api/users")
                 .content(asJsonString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -113,7 +114,7 @@ public class UserControllerTest {
     }
     @Test
     public void testDeleteUser() throws Exception {
-        UserDTO userDTO = new UserDTO("len1");
+        UserDTO userDTO = new UserDTO("jason@gmail.com");
         Map<String, Boolean> response = new HashMap<>();
         response.put("delete ok", Boolean.TRUE);
         //doNothing().when(userService.deleteUser(userDTO.getEmail()));
@@ -125,5 +126,4 @@ public class UserControllerTest {
         verify(userService, times(1)).deleteUser(userDTO.getEmail());
         verifyNoMoreInteractions(userService);
     }
-
 }

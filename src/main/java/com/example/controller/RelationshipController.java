@@ -10,6 +10,7 @@ import com.example.model.request.RequestFriendsList;
 import com.example.model.request.RequestReciveUpdate;
 import com.example.model.request.RequestSubcriber;
 import com.example.model.response.ResponseFriends;
+import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -23,7 +24,6 @@ import java.util.List;
 public class RelationshipController {
     @Autowired
     private RelationshipService relationshipService;
-
     @GetMapping("")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<?> findAllRelationships() {

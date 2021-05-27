@@ -19,14 +19,14 @@ import java.io.Serializable;
 public class RelationshipPK implements Serializable {
     @Column(name = "user_email")
     @Email(message = "error email")
-    @NotBlank(message = "not empty")
-    @NotNull(message = "not null for this data")
+    @NotNull(message = "not null for email")
+    @NotBlank(message = "must not be empty")
     private String userEmail;
 
     @Column(name = "friend_email")
     @Email(message = "error email")
-    @NotBlank(message = "not empty")
-    @NotNull(message = "not null for this data")
+    @NotNull(message = "not null for email")
+    @NotBlank(message = "must not be empty")
     private String friendEmail;
 
 

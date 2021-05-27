@@ -13,13 +13,12 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "sender", "text" })
 public class RequestReciveUpdate {
     @JsonProperty("sender")
-    @NotEmpty
     @Email(message = "email error")
     @NotNull(message = "not null for email")
+    @NotEmpty
     private String sender;
 
     @JsonProperty("text")

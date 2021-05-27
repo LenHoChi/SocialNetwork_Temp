@@ -18,14 +18,14 @@ import javax.validation.constraints.NotNull;
 @JsonPropertyOrder({ "requestor", "target" })
 public class RequestSubcriber {
     @JsonProperty("requestor")
-    @NotEmpty
     @Email(message = "email error")
     @NotNull(message = "not null for email")
+    @NotEmpty
     private String requestor;
 
     @JsonProperty("target")
-    @NotEmpty
     @Email(message = "email error")
     @NotNull(message = "not null for email")
+    @NotEmpty
     private String target;
 }
